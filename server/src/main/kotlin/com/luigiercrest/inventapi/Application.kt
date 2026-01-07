@@ -1,6 +1,6 @@
 package com.luigiercrest.inventapi
 
-import com.luigiercrest.inventapi.plugins.DatabaseFactory
+import com.luigiercrest.inventapi.database.DatabaseFactory
 import com.luigiercrest.inventapi.plugins.configureRouting
 import com.luigiercrest.inventapi.plugins.configureSerialization
 import io.ktor.server.application.*

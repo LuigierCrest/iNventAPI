@@ -1,0 +1,20 @@
+package com.luigiercrest.inventapi.models.dto
+
+import com.luigiercrest.inventapi.utils.LocalDateSerializer
+import kotlinx.serialization.Serializable
+import java.time.LocalDate
+
+@Serializable
+data class IncidenciaDTO
+    (
+    val idIncidencia: Int,
+    val idDispositivo: Int,
+    val idServicioTecnico: Int,
+    val dniResponsable : String,
+    val descripcion: String,
+    @Serializable(with = LocalDateSerializer::class)
+    val fechaApertura: LocalDate,
+    @Serializable(with = LocalDateSerializer::class)
+    val fechaCierre: LocalDate,
+    val estado: String
+    ) { }

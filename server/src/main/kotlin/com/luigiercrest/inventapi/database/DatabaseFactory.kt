@@ -1,4 +1,4 @@
-package com.luigiercrest.inventapi.plugins
+package com.luigiercrest.inventapi.database
 
 import com.luigiercrest.inventapi.inventoryDB
 import com.zaxxer.hikari.HikariConfig
@@ -17,7 +17,7 @@ object DatabaseFactory {
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         }
         val dataSource = HikariDataSource(config) // pool de Hikari
-        return Database.connect(dataSource) // Conecta Exposed a PostgreSQL
+        return Database.Companion.connect(dataSource) // Conecta Exposed a PostgreSQL
 
     }
 }

@@ -31,6 +31,7 @@ dependencies {
     // Core Exposed (ya lo tienes)
     implementation("org.jetbrains.exposed:exposed-core:0.55.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.57.0")
 
     // ← AGREGAR ESTA LÍNEA para java.time.LocalDate
     implementation("org.jetbrains.exposed:exposed-java-time:0.55.0")
