@@ -6,8 +6,8 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-class UsoEnttity(id: EntityID<Int>): IntEntity(id)  {
-    companion object : IntEntityClass<UsoEnttity>(Usos)
+class UsoEntity(id: EntityID<Int>): IntEntity(id)  {
+    companion object : IntEntityClass<UsoEntity>(Usos)
 
     var nombre by Usos.nombre
 

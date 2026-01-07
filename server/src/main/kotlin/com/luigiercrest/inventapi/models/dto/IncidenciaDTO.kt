@@ -8,12 +8,13 @@ import java.time.LocalDate
 data class IncidenciaDTO
     (
     val idIncidencia: Int,
+    val idCentro: Int,
     val idDispositivo: Int,
     val idServicioTecnico: Int,
     val dniResponsable : String,
     val descripcion: String,
     @Serializable(with = LocalDateSerializer::class)
-    val fechaApertura: LocalDate,
+    val fechaReporte: LocalDate,
     @Serializable(with = LocalDateSerializer::class)
     val fechaCierre: LocalDate,
     val estado: String

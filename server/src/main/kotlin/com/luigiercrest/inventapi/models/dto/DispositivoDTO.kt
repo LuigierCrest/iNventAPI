@@ -12,7 +12,7 @@ data class DispositivoDTO (
     val numSerie:String,
     val marcaModelo:String,
     @Serializable(with = LocalDateSerializer::class)
-    val ultimaActualizacion: LocalDate,
+    val ultimaActualizacion: LocalDate, //se transforma en localdate o string
     val observaciones: String,
     val idEstado:Int,
     val idCategoria:Int,

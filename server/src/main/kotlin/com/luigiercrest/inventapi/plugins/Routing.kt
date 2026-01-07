@@ -14,5 +14,6 @@ fun Application.configureRouting() {
         centroRouting()
         asignacionCompraRouting()
         dispositivoRouting()
+        usoRouting()
     }
 }
