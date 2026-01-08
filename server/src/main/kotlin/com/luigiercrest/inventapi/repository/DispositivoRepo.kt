@@ -8,7 +8,6 @@ import java.time.LocalDate
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class DispositivoRepo {
-
     // Helper para reducir boilerplate de transacciones
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }

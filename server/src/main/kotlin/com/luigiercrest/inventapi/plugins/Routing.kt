@@ -8,6 +8,8 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     routing {
         get("/") {
+            //Comporbar el tipo de usuario a través de la sesión o token
+            // responde con el tipo de usuario
             call.respondText("Conexión establecida")
         }
         usuarioRouting()
@@ -15,5 +17,13 @@ fun Application.configureRouting() {
         asignacionCompraRouting()
         dispositivoRouting()
         usoRouting()
+        asignacionCompraRouting()
+        ubicacionRouting()
+        dispositivoRouting()
+        categoriaRouting()
+        estadoRouting()
+        incidenciaRouting()
+        proveedorRouting()
+        servicioTecnicoRouting()
     }
 }

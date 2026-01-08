@@ -11,11 +11,11 @@ data class IncidenciaDTO
     val idCentro: Int,
     val idDispositivo: Int,
     val idServicioTecnico: Int,
-    val dniResponsable : String,
+    val dniResponsable: String,
     val descripcion: String,
     @Serializable(with = LocalDateSerializer::class)
     val fechaReporte: LocalDate,
     @Serializable(with = LocalDateSerializer::class)
-    val fechaCierre: LocalDate,
+    val fechaCierre: LocalDate?,
     val estado: String
     ) { }

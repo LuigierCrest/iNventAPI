@@ -1,7 +1,6 @@
 package com.luigiercrest.inventapi.routes
 
 import com.luigiercrest.inventapi.models.dto.UsoDTO
-import com.luigiercrest.inventapi.models.dto.UsuarioDTO
 import com.luigiercrest.inventapi.repository.UsoRepo
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.routing.Route
@@ -21,7 +20,7 @@ fun Route.usoRouting() {
             if (usos.isNotEmpty()) {
                 call.respond(usos)
             } else {
-                call.respond(HttpStatusCode.OK, emptyList<UsuarioDTO>())
+                call.respond(HttpStatusCode.OK, emptyList<UsoDTO>())
             }
         }
         // GET por id
@@ -46,6 +45,7 @@ fun Route.usoRouting() {
                 call.respond(HttpStatusCode.Created, "Uso agregado correctamente")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Datos de uso inválidos")
+                print(e)
             }
         }
         // PUT actualizar uso por id
@@ -64,6 +64,7 @@ fun Route.usoRouting() {
                 }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Datos de uso inválidos")
+                print(e)
             }
         }
         // DELETE eliminar uso por id

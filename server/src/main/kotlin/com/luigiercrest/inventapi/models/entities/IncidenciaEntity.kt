@@ -6,6 +6,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import java.time.LocalDate
 
 
 class IncidenciaEntity(id: EntityID<Int>) : IntEntity(id)  {
@@ -40,6 +41,6 @@ object Incidencias : IntIdTable("incidencia", "id_incidencia") {
     val dniResponsable = varchar("dni_responsable", 9)
     val descripcion = varchar("descripcion", 255)
     val fechaReporte = date("fecha_reporte")
-    val fechaCierre = date("fecha_cierre")
+    val fechaCierre = date("fecha_cierre").nullable()
     val estado = varchar("estado", 100)
 }

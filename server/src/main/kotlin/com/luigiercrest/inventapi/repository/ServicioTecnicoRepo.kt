@@ -35,4 +35,6 @@ class ServicioTecnicoRepo {
         ServicioTecnicoToDelete.delete()
         true
     }
+
+    companion object
 }
