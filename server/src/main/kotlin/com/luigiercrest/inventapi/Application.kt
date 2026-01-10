@@ -15,7 +15,7 @@ fun main() {
 }
 
 fun Application.module() {
-    val database = DatabaseFactory.init()
+    DatabaseFactory.init()
     configureSerialization()
     configureSecurity()
     configureRouting()
