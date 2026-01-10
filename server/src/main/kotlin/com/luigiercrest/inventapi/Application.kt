@@ -2,6 +2,7 @@ package com.luigiercrest.inventapi
 
 import com.luigiercrest.inventapi.database.DatabaseFactory
 import com.luigiercrest.inventapi.plugins.configureRouting
+import com.luigiercrest.inventapi.plugins.configureSecurity
 import com.luigiercrest.inventapi.plugins.configureSerialization
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -16,5 +17,7 @@ fun main() {
 fun Application.module() {
     val database = DatabaseFactory.init()
     configureSerialization()
+    configureSecurity()
     configureRouting()
+
 }
