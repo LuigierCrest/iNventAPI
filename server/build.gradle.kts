@@ -28,15 +28,15 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.dataconnect)
     implementation(libs.kotlinx.datetime)
-    // Core Exposed (ya lo tienes)
+    // Core Exposed
     implementation("org.jetbrains.exposed:exposed-core:0.55.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.57.0")
 
-    // ← AGREGAR ESTA LÍNEA para java.time.LocalDate
+    //java.time.LocalDate
     implementation("org.jetbrains.exposed:exposed-java-time:0.55.0")
 
-    // Postgres + HikariCP (ya lo tienes)
+    // Postgres + HikariCP
     runtimeOnly("org.postgresql:postgresql:42.7.4")
     implementation("com.zaxxer:HikariCP:5.1.0")
 
