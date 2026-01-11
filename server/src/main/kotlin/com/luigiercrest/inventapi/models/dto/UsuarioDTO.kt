@@ -10,5 +10,6 @@ data class UsuarioDTO (
     val apellidos:String,
     val email:String,
     val departamento:String,
-    val rol:String) {
+    val rol:String,
+    val passwdHash:String) {
 }

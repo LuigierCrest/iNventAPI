@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
-import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 
 class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
@@ -18,6 +17,8 @@ class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
     var departamento by Usuarios.departamento
     var rol by Usuarios.rol
 
+    var passwdHash by Usuarios.passwdHash
+
     // Función de mapeo para convertir a DTO
     fun toDTO() = UsuarioDTO(
         dni = this.dni,
@@ -26,7 +27,8 @@ class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
         apellidos = this.apellidos,
         email = this.email,
         departamento = this.departamento,
-        rol = this.rol
+        rol = this.rol,
+        passwdHash =this.passwdHash
     )
 }
 
@@ -39,4 +41,5 @@ object Usuarios : IdTable<String>("usuario") {
     val email = varchar("email", length = 100)
     val departamento = varchar("departamento", length = 100)
     val rol = varchar("rol", length = 20)
+    val passwdHash = varchar("passwd_hash", length = 256)
 }

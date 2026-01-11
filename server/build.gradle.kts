@@ -25,20 +25,15 @@ dependencies {
     implementation(libs.hikaricp)
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.java.time)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.dataconnect)
     implementation(libs.kotlinx.datetime)
-    // Core Exposed
-    implementation("org.jetbrains.exposed:exposed-core:0.55.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
-    implementation("org.jetbrains.exposed:exposed-dao:0.57.0")
-
-    //java.time.LocalDate
-    implementation("org.jetbrains.exposed:exposed-java-time:0.55.0")
-
-    // Postgres + HikariCP
-    runtimeOnly("org.postgresql:postgresql:42.7.4")
-    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation(libs.ktor.server.auth)
+    implementation(libs.ktor.server.auth.jwt)
+    implementation(libs.java.jwt)
+    implementation(libs.jbcrypt)
 
     testImplementation(libs.ktor.serverTestHost)
     testImplementation(libs.kotlin.testJunit)
