@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UsuarioDTO (
     val dni: String,
+    val idUsuario: Int,
     val idCentro: Int,
     val nombre: String,
     val apellidos:String,

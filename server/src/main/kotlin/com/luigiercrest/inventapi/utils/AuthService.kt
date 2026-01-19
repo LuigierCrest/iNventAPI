@@ -17,21 +17,24 @@ class AuthServiceImpl(private val usuarioRepo: UsuarioRepo) : AuthService {
 
     override suspend fun authenticate(dni: String, passwd: String): UsuarioDTO? {
         val usuario = usuarioRepo.getUsuarioByDni(dni)
-        // Verifica la contraseña
-        return if (BCrypt.checkpw(passwd, usuario?.passwdHash)) {
-            usuario
+        if (usuario != null) {
+            // Verifica la contraseña
+            return if (BCrypt.checkpw(passwd, usuario?.passwdHash)) {
+                usuario
+            } else {
+                null
+            }
         } else {
-            null
+            return null
         }
-
     }
 
     override fun generateToken(usuario: UsuarioDTO): String {
         return JWT.create()
             .withAudience(jwtconfig.AUDIENCE)
             .withIssuer(jwtconfig.ISSUER)
-            .withClaim("dni", usuario.dni)
-            .withClaim("rol", usuario.rol)
+            .withClaim("idUsuario", usuario.idUsuario)
+            //.withClaim("rol", usuario.rol)
             .withExpiresAt(Date(System.currentTimeMillis() + jwtconfig.EXPIRATION_TIME))
             .sign(Algorithm.HMAC256(jwtconfig.SECRET))
     }

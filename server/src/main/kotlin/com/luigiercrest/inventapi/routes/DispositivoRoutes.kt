@@ -1,6 +1,10 @@
 package com.luigiercrest.inventapi.routes
 
 import com.luigiercrest.inventapi.models.dto.DispositivoDTO
+import com.luigiercrest.inventapi.models.entities.Dispositivos.categoria
+import com.luigiercrest.inventapi.models.entities.Dispositivos.estado
+import com.luigiercrest.inventapi.models.entities.Dispositivos.ubicacion
+import com.luigiercrest.inventapi.models.entities.Dispositivos.uso
 import com.luigiercrest.inventapi.repository.DispositivoRepo
 import io.ktor.server.routing.*
 import io.ktor.http.HttpStatusCode
@@ -53,25 +57,25 @@ fun Route.dispositivoRouting(){
         //GET por estado
         get ("/estado/{idEstado}"){
             val idEstado = call.parameters["idEstado"]?.toIntOrNull() ?: -1
-            val dispositivos = DispositivoRepo().getDispositivosByEstado(idEstado)
+            val dispositivos = DispositivoRepo().getDispositivosByEstado(estado)
             call.respond(dispositivos)
         }
         //GET por categoria
         get ("/categoria/{idCategoria}"){
             val idCategoria = call.parameters["idCategoria"]?.toIntOrNull() ?: -1
-            val dispositivos = DispositivoRepo().getDispositivosByCategoria(idCategoria)
+            val dispositivos = DispositivoRepo().getDispositivosByCategoria(categoria)
             call.respond(dispositivos)
         }
         //GET por ubicación
         get ("/ubicacion/{idUbicacion}"){
             val idUbicacion = call.parameters["idUbicacion"]?.toIntOrNull() ?: -1
-            val dispositivos = DispositivoRepo().getDispositivosByUbicacion(idUbicacion)
+            val dispositivos = DispositivoRepo().getDispositivosByUbicacion(ubicacion)
             call.respond(dispositivos)
         }
         //GET por uso
         get ("/uso/{idUso}"){
             val idUso = call.parameters["idUso"]?.toIntOrNull() ?: -1
-            val dispositivos = DispositivoRepo().getDispositivosByUso(idUso)
+            val dispositivos = DispositivoRepo().getDispositivosByUso(uso)
             call.respond(dispositivos)
         }
         //GET por asignación

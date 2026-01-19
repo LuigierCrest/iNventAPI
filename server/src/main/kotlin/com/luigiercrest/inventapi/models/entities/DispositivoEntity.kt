@@ -16,10 +16,10 @@ class DispositivoEntity(id: EntityID<Int>): IntEntity(id) {
     var marcaModelo by Dispositivos.marcaModelo
     var ultimaActualizacion by Dispositivos.ultimaActualizacion
     var observaciones by Dispositivos.observaciones
-    var idEstado by Dispositivos.idEstado
-    var idCategoria by Dispositivos.idCategoria
-    var idUbicacion by Dispositivos.idUbicacion
-    var idUso by Dispositivos.idUso
+    var estado by Dispositivos.estado
+    var categoria by Dispositivos.categoria
+    var ubicacion by Dispositivos.ubicacion
+    var uso by Dispositivos.uso
     var idAsignacion by Dispositivos.idAsignacion
 
     // Función de mapeo para convertir a DTO
@@ -31,10 +31,10 @@ class DispositivoEntity(id: EntityID<Int>): IntEntity(id) {
         marcaModelo = this.marcaModelo,
         ultimaActualizacion = this.ultimaActualizacion,
         observaciones = this.observaciones,
-        idEstado = this.idEstado,
-        idCategoria = this.idCategoria,
-        idUbicacion = this.idUbicacion,
-        idUso = this.idUso,
+        estado = this.estado,
+        categoria = this.categoria,
+        ubicacion = this.ubicacion,
+        uso = this.uso,
         idAsignacion = this.idAsignacion
     )
 }
@@ -46,10 +46,10 @@ object Dispositivos : IntIdTable("dispositivo", "id_dispositivo") {
     val marcaModelo = varchar("marca_modelo",100)
     val ultimaActualizacion = date("ultima_actualizacion")
     val observaciones = varchar("observaciones",255)
-    val idEstado = integer("id_estado")
-    val idCategoria = integer("id_categoria")
-    val idUbicacion = integer("id_ubicacion")
-    val idUso = integer("id_uso")
+    val estado = varchar("estado",50)
+    val categoria = varchar("categoria", 50)
+    val ubicacion = varchar("ubicacion", 100)
+    val uso = varchar("uso", 50)
     val idAsignacion = integer("id_asignacion")
 }
 

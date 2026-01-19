@@ -14,9 +14,9 @@ data class DispositivoDTO (
     @Serializable(with = LocalDateSerializer::class)
     val ultimaActualizacion: LocalDate, //se transforma en localdate o string
     val observaciones: String,
-    val idEstado:Int,
-    val idCategoria:Int,
-    val idUbicacion:Int,
-    val idUso:Int,
+    val estado:String,
+    val categoria:String,
+    val ubicacion:String,
+    val uso:String,
     val idAsignacion:Int){
 }

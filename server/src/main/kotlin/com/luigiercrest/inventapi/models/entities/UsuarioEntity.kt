@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.Column
 class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
     companion object : EntityClass<String, UsuarioEntity>(Usuarios)
     val dni get() = id.value
+    var idUsuario by Usuarios.idUsuario
     var idCentro by Usuarios.idCentro
     var nombre by Usuarios.nombre
     var apellidos by Usuarios.apellidos
@@ -22,6 +23,7 @@ class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
     // Función de mapeo para convertir a DTO
     fun toDTO() = UsuarioDTO(
         dni = this.dni,
+        idUsuario = this.idUsuario,
         idCentro = this.idCentro,
         nombre = this.nombre,
         apellidos = this.apellidos,
@@ -35,6 +37,7 @@ class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
 object Usuarios : IdTable<String>("usuario") {
     override val id: Column<EntityID<String>> = varchar("dni", 9).entityId()
     override val primaryKey = PrimaryKey(id)
+    val idUsuario = integer("id_usuario").autoIncrement()
     val idCentro = integer("id_centro")
     val nombre = varchar("nombre", length = 50)
     val apellidos = varchar("apellidos", length = 100)

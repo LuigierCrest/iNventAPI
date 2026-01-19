@@ -4,6 +4,7 @@ import com.luigiercrest.inventapi.models.dto.DispositivoDTO
 import com.luigiercrest.inventapi.models.entities.DispositivoEntity
 import com.luigiercrest.inventapi.models.entities.Dispositivos
 import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.Column
 import java.time.LocalDate
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
@@ -42,23 +43,23 @@ class DispositivoRepo {
         }
     }
     //GET por estado
-    suspend fun getDispositivosByEstado(idEstado: Int): List<DispositivoDTO> = dbQuery {
-        DispositivoEntity.find { Dispositivos.idEstado eq idEstado }
+    suspend fun getDispositivosByEstado(estado: Column<String>): List<DispositivoDTO> = dbQuery {
+        DispositivoEntity.find { Dispositivos.estado eq estado }
             .map { it.toDTO() }
     }
     //GET por categoria
-    suspend fun getDispositivosByCategoria(idCategoria: Int): List<DispositivoDTO> = dbQuery {
-        DispositivoEntity.find { Dispositivos.idCategoria eq idCategoria }
+    suspend fun getDispositivosByCategoria(categoria: Column<String>): List<DispositivoDTO> = dbQuery {
+        DispositivoEntity.find { Dispositivos.categoria eq categoria }
             .map { it.toDTO() }
     }
     //GET por ubicación
-    suspend fun getDispositivosByUbicacion(idUbicacion: Int): List<DispositivoDTO> = dbQuery {
-        DispositivoEntity.find { Dispositivos.idUbicacion eq idUbicacion }
+    suspend fun getDispositivosByUbicacion(ubicacion: Column<String>): List<DispositivoDTO> = dbQuery {
+        DispositivoEntity.find { Dispositivos.ubicacion eq ubicacion }
             .map { it.toDTO() }
     }
     //GET por uso
-    suspend fun getDispositivosByUso(idUso: Int): List<DispositivoDTO> = dbQuery {
-        DispositivoEntity.find { Dispositivos.idUso eq idUso }
+    suspend fun getDispositivosByUso(uso: Column<String>): List<DispositivoDTO> = dbQuery {
+        DispositivoEntity.find { Dispositivos.uso eq uso }
             .map { it.toDTO() }
     }
     //GET por asignación
@@ -75,10 +76,10 @@ class DispositivoRepo {
             this.marcaModelo = dispositivo.marcaModelo
             this.ultimaActualizacion = dispositivo.ultimaActualizacion
             this.observaciones = dispositivo.observaciones
-            this.idEstado = dispositivo.idEstado
-            this.idCategoria = dispositivo.idCategoria
-            this.idUbicacion = dispositivo.idUbicacion
-            this.idUso = dispositivo.idUso
+            this.estado = dispositivo.estado
+            this.categoria = dispositivo.categoria
+            this.ubicacion = dispositivo.ubicacion
+            this.uso = dispositivo.uso
             this.idAsignacion = dispositivo.idAsignacion
         }.toDTO()
     }
@@ -91,10 +92,10 @@ class DispositivoRepo {
         dispositivoToUpdate.marcaModelo = dispositivo.marcaModelo
         dispositivoToUpdate.ultimaActualizacion = dispositivo.ultimaActualizacion
         dispositivoToUpdate.observaciones = dispositivo.observaciones
-        dispositivoToUpdate.idEstado = dispositivo.idEstado
-        dispositivoToUpdate.idCategoria = dispositivo.idCategoria
-        dispositivoToUpdate.idUbicacion = dispositivo.idUbicacion
-        dispositivoToUpdate.idUso = dispositivo.idUso
+        dispositivoToUpdate.estado = dispositivo.estado
+        dispositivoToUpdate.categoria = dispositivo.categoria
+        dispositivoToUpdate.ubicacion = dispositivo.ubicacion
+        dispositivoToUpdate.uso = dispositivo.uso
         dispositivoToUpdate.idAsignacion = dispositivo.idAsignacion
         true
     }

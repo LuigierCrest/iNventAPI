@@ -13,5 +13,6 @@ data class LoginResponse(
     val token: String,
     val expiresIn: Int,
     val rol: String,
-    val dni: String
+    val idCentro : Int? = null,
+    val idUsuario: Int? = null
 )

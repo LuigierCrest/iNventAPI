@@ -4,10 +4,11 @@ import io.ktor.server.application.Application
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.luigiercrest.inventapi.jwtconfig
+//import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.response.respond
+import io.ktor.server.response.*
 
 fun Application.configureSecurity() {
     install(Authentication) {
@@ -21,9 +22,11 @@ fun Application.configureSecurity() {
                     .build()
             )
             validate { credential ->
-                val dni = credential.payload.getClaim("dni").asString()
-                val rol = credential.payload.getClaim("rol").asString()
-                if (dni.isNotEmpty() && rol.isNotEmpty()) {
+                //val dni = credential.payload.getClaim("dni").asString()
+                //val rol = credential.payload.getClaim("rol").asString()
+                val idUsuario = credential.payload.getClaim("idUsuario").asInt()
+                //if (dni.isNotEmpty() && rol.isNotEmpty())
+                if (idUsuario != null) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null

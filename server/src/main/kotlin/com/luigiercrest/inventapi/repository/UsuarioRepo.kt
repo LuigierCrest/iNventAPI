@@ -5,6 +5,7 @@ import com.luigiercrest.inventapi.models.entities.UsuarioEntity
 import com.luigiercrest.inventapi.models.entities.Usuarios
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class UsuarioRepo {
     // Helper para reducir boilerplate de transacciones
@@ -19,6 +20,7 @@ class UsuarioRepo {
     suspend fun getUsuarioByDni(dni: String): UsuarioDTO? = dbQuery {
         UsuarioEntity.find { Usuarios.id eq dni }.firstOrNull()?.toDTO()
     }
+
     // GET por centro
     suspend fun getUsuariosByCentro(idCentro: Int): List<UsuarioDTO> = dbQuery {
         UsuarioEntity.find { Usuarios.idCentro eq idCentro }.map { it.toDTO() }
@@ -67,5 +69,15 @@ class UsuarioRepo {
             ?: return@dbQuery false
         usuarioToDelete.delete()
         true
+    }
+
+    // esta función no se usa para las corrutinas, es necesaria para la autorización JWT por roles
+
+    fun getRolUsuarioById(idUsuario: Int): String? {
+        return transaction {
+            val usuario = UsuarioEntity.find { Usuarios.idUsuario eq idUsuario }.firstOrNull()
+            val rol = usuario?.rol
+            rol
+        }
     }
 }

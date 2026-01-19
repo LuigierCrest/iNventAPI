@@ -28,7 +28,7 @@ dependencies {
     implementation(libs.exposed.dao)
     implementation(libs.exposed.java.time)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.firebase.dataconnect)
+//    implementation(libs.firebase.dataconnect)
     implementation(libs.kotlinx.datetime)
     implementation(libs.ktor.server.auth)
     implementation(libs.ktor.server.auth.jwt)

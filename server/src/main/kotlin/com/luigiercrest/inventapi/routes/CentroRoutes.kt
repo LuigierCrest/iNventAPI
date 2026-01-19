@@ -2,6 +2,8 @@ package com.luigiercrest.inventapi.routes
 
 import com.luigiercrest.inventapi.models.dto.CentroDTO
 import com.luigiercrest.inventapi.repository.CentroRepo
+//import com.luigiercrest.inventapi.utils.Roles
+//import com.luigiercrest.inventapi.utils.withRole
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
@@ -18,12 +20,16 @@ fun Route.centroRouting() {
     route("/centros"){
         //GET todos
         get {
-            val centros = CentroRepo().getAllCentros()
-            if (centros.isNotEmpty()) {
-                call.respond(centros)
-            } else {
-                call.respond(HttpStatusCode.OK, emptyList<CentroDTO>())
-            }
+            //withRole(call, Roles.ADMIN){
+                val centros = CentroRepo().getAllCentros()
+                if (centros.isNotEmpty()) {
+                    println("devolviendo centros")
+                    call.respond(centros)
+                } else {
+                    call.respond(HttpStatusCode.OK, emptyList<CentroDTO>())
+                }
+            //}
+
         }
         // GET id
         get("/{id}") {

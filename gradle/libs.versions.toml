@@ -7,7 +7,7 @@ kotlinx_serialization = "1.6.0"
 kotlinx_datetime = "0.7.1"
 postgres = "42.7.8"
 hikaricp = "5.0.1"
-firebaseDataconnect = "17.1.2"
+#firebaseDataconnect = "17.1.2"
 java_jwt = "4.4.0"
 jbcrypt = "0.4"
 ktor_auth = "3.3.0"
@@ -34,7 +34,7 @@ exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exp
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed_java_time" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
-firebase-dataconnect = { group = "com.google.firebase", name = "firebase-dataconnect", version.ref = "firebaseDataconnect" }
+#firebase-dataconnect = { group = "com.google.firebase", name = "firebase-dataconnect", version.ref = "firebaseDataconnect" }
 java-jwt = { module = "com.auth0:java-jwt", version.ref = "java_jwt" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 ktor-server-auth = { module = "io.ktor:ktor-server-auth-jvm", version.ref = "ktor_auth" }
