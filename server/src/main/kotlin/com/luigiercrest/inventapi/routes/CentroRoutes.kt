@@ -20,7 +20,6 @@ fun Route.centroRouting() {
     route("/centros"){
         //GET todos
         get {
-            //withRole(call, Roles.ADMIN){
                 val centros = CentroRepo().getAllCentros()
                 if (centros.isNotEmpty()) {
                     println("devolviendo centros")
@@ -28,7 +27,6 @@ fun Route.centroRouting() {
                 } else {
                     call.respond(HttpStatusCode.OK, emptyList<CentroDTO>())
                 }
-            //}
 
         }
         // GET id

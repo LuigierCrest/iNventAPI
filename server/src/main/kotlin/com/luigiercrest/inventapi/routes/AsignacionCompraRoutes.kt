@@ -18,7 +18,6 @@ fun Route.asignacionCompraRouting() {
                 call.respond(asignacionCompras)
             } else {
                 call.respond(HttpStatusCode.OK, emptyList<AsignacionCompraDTO>())
-
             }
         }
         //GET por id
@@ -42,7 +41,7 @@ fun Route.asignacionCompraRouting() {
         }
         //GET por proveedor
         get("/proveedor/{idproveedor}") {
-            val idProveedor = call.parameters["proveedor"]?.toIntOrNull() ?: -1
+            val idProveedor = call.parameters["idproveedor"]?.toIntOrNull() ?: -1
             val asignacionCompras = AsignacionCompraRepo().getAsignacionCompraByProveedor(idProveedor)
             call.respond(asignacionCompras)
         }

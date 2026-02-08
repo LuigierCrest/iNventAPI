@@ -41,7 +41,7 @@ fun Route.proveedorRouting(){
             try {
                 val proveedor = call.receive<ProveedorDTO>()
                 val nuevoProveedor = ProveedorRepo().addProveedor(proveedor)
-                call.respond(HttpStatusCode.Created, nuevoProveedor)
+                call.respond(HttpStatusCode.Created, "Proveedor creado con éxito")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Error al crear el proveedor: ${e.message}")
             }

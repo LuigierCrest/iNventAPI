@@ -4,7 +4,9 @@ import com.luigiercrest.inventapi.models.dto.CentroDTO
 import com.luigiercrest.inventapi.models.entities.CentroEntity
 import com.luigiercrest.inventapi.models.entities.Centros
 import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
 
 
 class CentroRepo () {
@@ -41,12 +43,14 @@ class CentroRepo () {
 
     //PUT actualizar centro por id
     suspend fun updateCentro(id: Int, centro: CentroDTO): Boolean = dbQuery {
-        val centroToUpdate = CentroEntity.findById(id) ?: return@dbQuery false
-        centroToUpdate.tipo = centro.tipo
-        centroToUpdate.nombre = centro.nombre
-        centroToUpdate.direccion = centro.direccion
-        centroToUpdate.municipio = centro.municipio
-        true
+        CentroEntity.findById(id) ?: return@dbQuery false
+        val rows = Centros.update({ Centros.id eq id }) {
+            it[this.tipo] = centro.tipo
+            it[this.nombre] = centro.nombre
+            it[this.direccion] = centro.direccion
+            it[this.municipio] = centro.municipio
+        }
+        rows > 0
     }
     //DELETE eliminar centro por id
     suspend fun deleteCentro(id: Int): Boolean = dbQuery {

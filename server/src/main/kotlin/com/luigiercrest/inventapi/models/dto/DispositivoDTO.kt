@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 @Serializable
 data class DispositivoDTO (
-    val idDispositivo: Int,
+    val idDispositivo: Int?=null,
     val idCentro:Int,
     val nombre:String,
     val numSerie:String,

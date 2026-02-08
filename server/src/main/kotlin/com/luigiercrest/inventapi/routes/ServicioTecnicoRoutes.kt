@@ -13,7 +13,7 @@ import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 fun Route.servicioTecnicoRouting(){
-    route ("/serviciotecnicos"){
+    route ("/serviciostecnicos"){
         // GET todos los servicios técnicos
         get {
             val serviciosTecnicos = ServicioTecnicoRepo().getAllServicioTecnicos()
@@ -40,8 +40,8 @@ fun Route.servicioTecnicoRouting(){
         post{
             try {
                 val servicioTecnico = call.receive<ServicioTecnicoDTO>()
-                val nuevoServicioTecnico = ServicioTecnicoRepo().addServicioTecnico(servicioTecnico)
-                call.respond(HttpStatusCode.Created, nuevoServicioTecnico)
+                ServicioTecnicoRepo().addServicioTecnico(servicioTecnico)
+                call.respond(HttpStatusCode.Created, "Servicio Técnico creado con éxito")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Error al crear el servicio técnico: ${e.message}")
             }

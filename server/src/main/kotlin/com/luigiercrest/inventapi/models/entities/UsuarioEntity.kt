@@ -3,14 +3,16 @@ package com.luigiercrest.inventapi.models.entities
 import com.luigiercrest.inventapi.models.dto.UsuarioDTO
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 
-class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
-    companion object : EntityClass<String, UsuarioEntity>(Usuarios)
-    val dni get() = id.value
-    var idUsuario by Usuarios.idUsuario
+class UsuarioEntity (id: EntityID<Int>): IntEntity(id)  {
+    companion object : IntEntityClass<UsuarioEntity>(Usuarios)
+    var dni by Usuarios.dni
     var idCentro by Usuarios.idCentro
     var nombre by Usuarios.nombre
     var apellidos by Usuarios.apellidos
@@ -21,23 +23,21 @@ class UsuarioEntity (id: EntityID<String>): Entity<String>(id)  {
     var passwdHash by Usuarios.passwdHash
 
     // Función de mapeo para convertir a DTO
-    fun toDTO() = UsuarioDTO(
+    fun toDTO(incluyePasswd: Boolean = false): UsuarioDTO = UsuarioDTO(
+        idUsuario = this.id.value,
         dni = this.dni,
-        idUsuario = this.idUsuario,
         idCentro = this.idCentro,
         nombre = this.nombre,
         apellidos = this.apellidos,
         email = this.email,
         departamento = this.departamento,
         rol = this.rol,
-        passwdHash =this.passwdHash
+        passwdHash = if (incluyePasswd) this.passwdHash else null
     )
 }
 
-object Usuarios : IdTable<String>("usuario") {
-    override val id: Column<EntityID<String>> = varchar("dni", 9).entityId()
-    override val primaryKey = PrimaryKey(id)
-    val idUsuario = integer("id_usuario").autoIncrement()
+object Usuarios : IntIdTable("usuario", "id_usuario") {
+    val dni = varchar("dni", 9).uniqueIndex()
     val idCentro = integer("id_centro")
     val nombre = varchar("nombre", length = 50)
     val apellidos = varchar("apellidos", length = 100)

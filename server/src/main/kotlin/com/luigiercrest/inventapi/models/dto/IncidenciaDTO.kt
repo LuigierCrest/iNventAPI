@@ -7,7 +7,7 @@ import java.time.LocalDate
 @Serializable
 data class IncidenciaDTO
     (
-    val idIncidencia: Int,
+    val idIncidencia: Int? = null,
     val idCentro: Int,
     val idDispositivo: Int,
     val idServicioTecnico: Int,

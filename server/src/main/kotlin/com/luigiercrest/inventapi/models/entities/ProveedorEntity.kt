@@ -28,7 +28,7 @@ class ProveedorEntity(id: EntityID<Int>): IntEntity(id) {
 
 object Proveedores : IntIdTable("proveedor","id_proveedor") {
     val nombre = varchar("nombre", 100)
-    val direccion = varchar("direccion", 150)
-    val telefono = varchar("telefono", 20)
-    val email = varchar("email", 100)
+    val direccion = varchar("direccion", 150).nullable()
+    val telefono = varchar("telefono", 20).nullable()
+    val email = varchar("email", 100).nullable()
 }

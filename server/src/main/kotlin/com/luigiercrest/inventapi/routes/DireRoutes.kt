@@ -3,6 +3,7 @@ package com.luigiercrest.inventapi.routes
 import com.luigiercrest.inventapi.models.dto.UsuarioDTO
 import com.luigiercrest.inventapi.repository.UsuarioRepo
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.log
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -22,18 +23,20 @@ fun Route.direRouting() {
             val usuarios = UsuarioRepo().getUsuariosByCentro(idCentro)
             call.respond(usuarios)
         }
+        // POST crear usuario
+        post("/nuevousuario") {
 
-        // POST crear usuario en centro, desde el cliente se manda el idCentro automáticamente
-        post {
             try {
+                println("[DIRE] Recibido nuevo usuario: ${call.request}")
                 val dto = call.receive<UsuarioDTO>()
+                println("[DIRE] Recibido nuevo usuario: $dto")
                 UsuarioRepo().addUsuario(dto)
                 call.respond(HttpStatusCode.Created, "Usuario agregado correctamente")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "Datos de usuario inválidos")
             }
         }
-        // PUT actualizar usuario en centro, desde el cliente se manda el idCentro automáticamente
+        // PUT actualizar usuario
         put ("/{dni}"){
             val dni = call.parameters["dni"] ?: ""
             try {

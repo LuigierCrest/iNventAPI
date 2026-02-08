@@ -4,8 +4,10 @@ import com.luigiercrest.inventapi.models.dto.IncidenciaDTO
 import com.luigiercrest.inventapi.models.entities.IncidenciaEntity
 import com.luigiercrest.inventapi.models.entities.Incidencias
 import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.and
 import java.time.LocalDate
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
 
 class IncidenciaRepo {
     // Helper para reducir boilerplate de transacciones
@@ -23,6 +25,11 @@ class IncidenciaRepo {
     //GET por centro
     suspend fun getIncidenciasByCentro(idCentro: Int): List<IncidenciaDTO> = dbQuery {
         IncidenciaEntity.find { Incidencias.idCentro eq idCentro }
+            .map { it.toDTO() }
+    }
+    // GET por centro y dispositivo
+    suspend fun getIncidenciasByCentroAndDispositivo(idCentro: Int, idDispositivo: Int): List<IncidenciaDTO> = dbQuery {
+        IncidenciaEntity.find { (Incidencias.idCentro eq idCentro) and (Incidencias.idDispositivo eq idDispositivo) }
             .map { it.toDTO() }
     }
     //GET por dispositivo
@@ -58,46 +65,56 @@ class IncidenciaRepo {
     }
     //GET por fecha cierre
     suspend fun getIncidenciasByFechaCierre(fechaCierre: String): List<IncidenciaDTO> = dbQuery {
-        try {
-            val fecha2 = LocalDate.parse(fechaCierre)
-            IncidenciaEntity.find { Incidencias.fechaCierre eq fecha2 }
+        if (fechaCierre.isBlank() || fechaCierre.equals("null", ignoreCase = true)) {
+            IncidenciaEntity.find { Incidencias.fechaCierre.isNull() }
                 .map { it.toDTO() }
-        } catch (e: Exception) {
-            emptyList<IncidenciaDTO>()
+        } else {
+            try {
+                val fecha2 = LocalDate.parse(fechaCierre)
+                IncidenciaEntity.find { Incidencias.fechaCierre eq fecha2 }
+                    .map { it.toDTO() }
+            } catch (e: Exception) {
+                emptyList<IncidenciaDTO>()
+            }
         }
+
 
     }
     //POST crear incidencia
     suspend fun addIncidencia(incidencia: IncidenciaDTO) = dbQuery {
-        IncidenciaEntity.new(incidencia.idIncidencia) {
+        IncidenciaEntity.new() {
             this.idCentro = incidencia.idCentro
             this.idDispositivo = incidencia.idDispositivo
             this.idServicioTecnico = incidencia.idServicioTecnico
             this.dniResponsable = incidencia.dniResponsable
             this.descripcion = incidencia.descripcion
-            this.estado = incidencia.estado
             this.fechaReporte = incidencia.fechaReporte
             this.fechaCierre = incidencia.fechaCierre
+            this.estado = incidencia.estado
         }.toDTO()
     }
     //PUT actualizar incidencia por id
     suspend fun updateIncidencia(id: Int, incidencia: IncidenciaDTO): Boolean = dbQuery {
-        val incidenciaToUpdate = IncidenciaEntity.findById(id) ?: return@dbQuery false
-        incidenciaToUpdate.idCentro = incidencia.idCentro
-        incidenciaToUpdate.idDispositivo = incidencia.idDispositivo
-        incidenciaToUpdate.idServicioTecnico = incidencia.idServicioTecnico
-        incidenciaToUpdate.dniResponsable = incidencia.dniResponsable
-        incidenciaToUpdate.descripcion = incidencia.descripcion
-        incidenciaToUpdate.estado = incidencia.estado
-        incidenciaToUpdate.fechaReporte = incidencia.fechaReporte
-        incidenciaToUpdate.fechaCierre = incidencia.fechaCierre
-        true
+        IncidenciaEntity.findById(id) ?: return@dbQuery false
+        val rows = Incidencias.update({ Incidencias.id eq id }) {
+            it[this.idCentro] = incidencia.idCentro
+            it[this.idDispositivo] = incidencia.idDispositivo
+            it[this.idServicioTecnico] = incidencia.idServicioTecnico
+            it[this.dniResponsable] = incidencia.dniResponsable
+            it[this.descripcion] = incidencia.descripcion
+            it[this.fechaReporte] = incidencia.fechaReporte
+            it[this.fechaCierre] = incidencia.fechaCierre
+            it[this.estado] = incidencia.estado
+        }
+        rows > 0
     }
-    //PUT actualizar estado de incidencia por id
+    //PUT actualizar el estado de incidencia por id
     suspend fun updateEstadoIncidencia(id: Int, estado: String): Boolean = dbQuery {
-        val incidenciaToUpdate = IncidenciaEntity.findById(id) ?: return@dbQuery false
-        incidenciaToUpdate.estado = estado
-        true
+        IncidenciaEntity.findById(id) ?: return@dbQuery false
+        val rows = Incidencias.update({ Incidencias.id eq id }) {
+            it[this.estado] = estado
+        }
+        rows > 0
     }
     //DELETE eliminar incidencia por id
     suspend fun deleteIncidencia(id: Int): Boolean = dbQuery {

@@ -36,6 +36,18 @@ fun Route.dispositivoRouting(){
                 call.respond(HttpStatusCode.NotFound, "Dispositivo no encontrado")
             }
         }
+        //GET por nombre
+        get("/nombre/{nombre}"){
+            val nombre = call.parameters["nombre"] ?: ""
+            val dispositivos = DispositivoRepo().getDispositivosByNombre(nombre)
+            call.respond(dispositivos)
+        }
+        //GET por número de serie
+        get("/numserie/{numSerie}"){
+            val numSerie = call.parameters["numSerie"] ?: ""
+            val dispositivos = DispositivoRepo().getDispositivosByNumSerie(numSerie)
+            call.respond(dispositivos)
+        }
         //GET por centro
         get ("/centro/{idCentro}"){
             val idCentro = call.parameters["idCentro"]?.toIntOrNull() ?: -1
@@ -43,38 +55,38 @@ fun Route.dispositivoRouting(){
             call.respond(dispositivos)
         }
         //GET por Marca Modelo
-        get ("/marcaModelo/{marcaModelo}"){
+        get ("/marcamodelo/{marcaModelo}"){
             val marcaModelo = call.parameters["marcaModelo"] ?: ""
             val dispositivos = DispositivoRepo().getDispositivosByMarcaModelo(marcaModelo)
             call.respond(dispositivos)
         }
         //GET por actualización
-        get ("/ultimaActualizacion/{ultimaActualizacion}"){
+        get ("/ultimaactualizacion/{ultimaActualizacion}"){
             val ultimaActualizacion = call.parameters["ultimaActualizacion"] ?: ""
             val dispositivos = DispositivoRepo().getDispositivosByUltimaActualizacion(ultimaActualizacion)
             call.respond(dispositivos)
         }
         //GET por estado
-        get ("/estado/{idEstado}"){
-            val idEstado = call.parameters["idEstado"]?.toIntOrNull() ?: -1
+        get ("/estado/{estado}"){
+            val idEstado = call.parameters["estado"]?.toIntOrNull() ?: -1
             val dispositivos = DispositivoRepo().getDispositivosByEstado(estado)
             call.respond(dispositivos)
         }
         //GET por categoria
-        get ("/categoria/{idCategoria}"){
-            val idCategoria = call.parameters["idCategoria"]?.toIntOrNull() ?: -1
+        get ("/categoria/{categoria}"){
+            val idCategoria = call.parameters["categoria"]?.toIntOrNull() ?: -1
             val dispositivos = DispositivoRepo().getDispositivosByCategoria(categoria)
             call.respond(dispositivos)
         }
         //GET por ubicación
-        get ("/ubicacion/{idUbicacion}"){
-            val idUbicacion = call.parameters["idUbicacion"]?.toIntOrNull() ?: -1
+        get ("/ubicacion/{ubicacion}"){
+            val idUbicacion = call.parameters["ubicacion"]?.toIntOrNull() ?: -1
             val dispositivos = DispositivoRepo().getDispositivosByUbicacion(ubicacion)
             call.respond(dispositivos)
         }
         //GET por uso
-        get ("/uso/{idUso}"){
-            val idUso = call.parameters["idUso"]?.toIntOrNull() ?: -1
+        get ("/uso/{uso}"){
+            val idUso = call.parameters["uso"]?.toIntOrNull() ?: -1
             val dispositivos = DispositivoRepo().getDispositivosByUso(uso)
             call.respond(dispositivos)
         }

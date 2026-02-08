@@ -1,11 +1,20 @@
 package com.luigiercrest.inventapi.repository
 
+import com.luigiercrest.inventapi.exceptions.ClaveForaneaException
 import com.luigiercrest.inventapi.models.dto.UsuarioDTO
 import com.luigiercrest.inventapi.models.entities.UsuarioEntity
 import com.luigiercrest.inventapi.models.entities.Usuarios
+import com.luigiercrest.inventapi.exceptions.DniException
+import com.luigiercrest.inventapi.models.entities.CentroEntity
 import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.exceptions.ExposedSQLException
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
+import org.postgresql.util.PSQLException
+import org.slf4j.LoggerFactory
+import kotlin.text.get
 
 class UsuarioRepo {
     // Helper para reducir boilerplate de transacciones
@@ -14,70 +23,118 @@ class UsuarioRepo {
 
     //GET todos
     suspend fun getAllUsuarios(): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.all().map { it.toDTO() }
+        UsuarioEntity.all().map { it.toDTO(incluyePasswd = false) }
     }
+
     //GET por dni
     suspend fun getUsuarioByDni(dni: String): UsuarioDTO? = dbQuery {
-        UsuarioEntity.find { Usuarios.id eq dni }.firstOrNull()?.toDTO()
+        UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()?.toDTO(incluyePasswd = false)
+    }
+    //GET por dni para Auth, devuelve el hash de la contraseña
+    suspend fun getUsuarioByDniAuth(dni: String): UsuarioDTO? = dbQuery {
+        UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()?.toDTO(incluyePasswd = true)
     }
 
     // GET por centro
     suspend fun getUsuariosByCentro(idCentro: Int): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.find { Usuarios.idCentro eq idCentro }.map { it.toDTO() }
+        UsuarioEntity.find { Usuarios.idCentro eq idCentro }.map { it.toDTO(incluyePasswd = false) }
     }
+
     // GET por nombre
     suspend fun getUsuariosByNombre(nombre: String): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.find { Usuarios.nombre eq nombre }.map { it.toDTO() }
+        UsuarioEntity.find { Usuarios.nombre eq nombre }.map { it.toDTO(incluyePasswd = false) }
     }
+
     // GET por apellidos
     suspend fun getUsuariosByApellidos(apellidos: String): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.find { Usuarios.apellidos eq apellidos }.map { it.toDTO() }
+        UsuarioEntity.find { Usuarios.apellidos eq apellidos }.map { it.toDTO(incluyePasswd = false) }
     }
+
     // GET por departamento
     suspend fun getUsuariosByDepartamento(departamento: String): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.find { Usuarios.departamento eq departamento }.map { it.toDTO() }
+        UsuarioEntity.find { Usuarios.departamento eq departamento }.map { it.toDTO(incluyePasswd = false) }
     }
+
     // GET por rol
     suspend fun getUsuariosByRol(rol: String): List<UsuarioDTO> = dbQuery {
-        UsuarioEntity.find { Usuarios.rol eq rol }.map { it.toDTO() }
+        UsuarioEntity.find { Usuarios.rol eq rol }.map { it.toDTO(incluyePasswd = false) }
     }
+
     // POST crear usuario
-    suspend fun addUsuario(usuario: UsuarioDTO) = dbQuery {
-        UsuarioEntity.new(usuario.dni) {
-            this.idCentro = usuario.idCentro
-            this.nombre = usuario.nombre
-            this.apellidos = usuario.apellidos
-            this.email = usuario.email
-            this.departamento = usuario.departamento
-            this.rol = usuario.rol
-        }.toDTO()
+    suspend fun addUsuario(nuevoUsuario: UsuarioDTO): UsuarioDTO = dbQuery {
+        val existing = UsuarioEntity.find { Usuarios.dni eq nuevoUsuario.dni }.firstOrNull()
+        if (existing != null) {
+            throw DniException()
+        }
+        val centroExists = CentroEntity.findById(nuevoUsuario.idCentro) != null
+        if (!centroExists) {
+            throw ClaveForaneaException()
+        }
+        try {
+            val created = UsuarioEntity.new() {
+                this.dni= nuevoUsuario.dni
+                this.idCentro = nuevoUsuario.idCentro
+                this.nombre = nuevoUsuario.nombre
+                this.apellidos = nuevoUsuario.apellidos
+                this.email = nuevoUsuario.email.toString()
+                this.departamento = nuevoUsuario.departamento.toString()
+                this.rol = nuevoUsuario.rol
+                this.passwdHash = nuevoUsuario.passwdHash.toString()
+            }
+            created.toDTO()
+        } catch (e: ExposedSQLException) {
+            // Exposed puede envolver la PSQLException
+            val psql = e.cause as? PSQLException ?: e.cause?.cause as? PSQLException
+            if (psql?.sqlState == "23505") {
+                println(DniException())
+            }
+            throw e
+        } catch (e: Exception) {
+            throw e
+        }
     }
+
     // PUT actualizar usuario por dni
     suspend fun updateUsuario(dni: String, usuario: UsuarioDTO): Boolean = dbQuery {
-        val usuarioToUpdate = UsuarioEntity.find { Usuarios.id eq dni }.firstOrNull()
-            ?: return@dbQuery false
-        usuarioToUpdate.idCentro = usuario.idCentro
-        usuarioToUpdate.nombre = usuario.nombre
-        usuarioToUpdate.apellidos = usuario.apellidos
-        usuarioToUpdate.departamento = usuario.departamento
-        usuarioToUpdate.rol = usuario.rol
-        true
+        UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull() ?: return@dbQuery false
+        val rows = Usuarios.update({ Usuarios.dni eq dni }) {
+            it[Usuarios.idCentro] = usuario.idCentro
+            it[Usuarios.nombre] = usuario.nombre
+            it[Usuarios.apellidos] = usuario.apellidos
+            it[Usuarios.email] = usuario.email.toString()
+            it[Usuarios.departamento] = usuario.departamento.toString()
+            it[Usuarios.rol] = usuario.rol
+            // la contraseña solo la puede actualizar el propio usuario
+            //it[Usuarios.passwdHash] = usuario.passwdHash
+        }
+        rows > 0
     }
+    // PUT actualizar contraseña por dni
+    suspend fun updateUsuarioPassword(dni: String, passwdHash: String): Boolean = dbQuery {
+        val usuarioToUpdate = UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()
+            ?: return@dbQuery false
+        val rows = Usuarios.update({ Usuarios.dni eq dni }) {
+            it[Usuarios.passwdHash] = passwdHash
+        }
+        rows > 0
+    }
+
+
     // DELETE eliminar usuario por dni
     suspend fun deleteUsuario(dni: String): Boolean = dbQuery {
-        val usuarioToDelete = UsuarioEntity.find { Usuarios.id eq dni }.firstOrNull()
+        val usuarioToDelete = UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()
             ?: return@dbQuery false
         usuarioToDelete.delete()
         true
     }
 
-    // esta función no se usa para las corrutinas, es necesaria para la autorización JWT por roles
-
-    fun getRolUsuarioById(idUsuario: Int): String? {
-        return transaction {
-            val usuario = UsuarioEntity.find { Usuarios.idUsuario eq idUsuario }.firstOrNull()
-            val rol = usuario?.rol
-            rol
-        }
-    }
+    // esta función no se usa para las corrutinas, usada para un test en la autorización JWT por roles
+//
+//    fun getRolUsuarioById(idUsuario: Int): String? {
+//        return transaction {
+//            val usuario = UsuarioEntity.find { Usuarios.idUsuario eq idUsuario }.firstOrNull()
+//            val rol = usuario?.rol
+//            rol
+//        }
+//    }
 }

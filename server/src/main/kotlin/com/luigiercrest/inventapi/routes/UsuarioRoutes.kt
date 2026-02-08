@@ -35,6 +35,7 @@ fun Route.usuarioRouting(){
                 call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
             }
         }
+        // GET por idUsuario
         //GET por centro
         get ("/centro/{idCentro}"){
             val idCentro = call.parameters["idCentro"]?.toIntOrNull() ?: -1
@@ -59,6 +60,13 @@ fun Route.usuarioRouting(){
             val usuarios = UsuarioRepo().getUsuariosByRol(rol)
             call.respond(usuarios)
         }
+        // GET por departamento
+        get("/departamento/{departamento}"){
+            val departamento = call.parameters["departamento"] ?: ""
+            val usuarios = UsuarioRepo().getUsuariosByDepartamento(departamento)
+            call.respond(usuarios)
+        }
+
         //POST crear usuario
         post {
             try {

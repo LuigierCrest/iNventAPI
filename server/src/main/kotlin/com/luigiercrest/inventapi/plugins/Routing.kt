@@ -49,7 +49,7 @@ fun Application.configureRouting() {
                 }
             }
             authenticate("auth-jwt") {
-                get("/") {
+                get("/authtest") {
                     call.respondText("¡Conexión con autenticación exitosa!")
                 }
                 route("/admin") {

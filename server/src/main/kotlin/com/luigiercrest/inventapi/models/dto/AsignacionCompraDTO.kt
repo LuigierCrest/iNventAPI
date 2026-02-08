@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 @Serializable
 data class AsignacionCompraDTO (
-    val idAsignacionCompra: Int,
+    val idAsignacionCompra: Int? = null,
     val idCentro: Int,
     val idProveedor: Int,
     @Serializable(with = LocalDateSerializer::class)

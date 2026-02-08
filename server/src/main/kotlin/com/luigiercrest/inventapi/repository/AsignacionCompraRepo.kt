@@ -1,11 +1,22 @@
 package com.luigiercrest.inventapi.repository
 
+import com.luigiercrest.inventapi.exceptions.AsignacionException
+import com.luigiercrest.inventapi.exceptions.ClaveForaneaException
+import com.luigiercrest.inventapi.exceptions.DniException
+import com.luigiercrest.inventapi.exceptions.FormatoFechaException
 import com.luigiercrest.inventapi.models.dto.AsignacionCompraDTO
 import com.luigiercrest.inventapi.models.entities.AsignacionCompraEntity
 import com.luigiercrest.inventapi.models.entities.AsignacionCompras
+import com.luigiercrest.inventapi.models.entities.CentroEntity
+import com.luigiercrest.inventapi.models.entities.ProveedorEntity
+import com.luigiercrest.inventapi.models.entities.UsuarioEntity
+import com.luigiercrest.inventapi.models.entities.Usuarios
 import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import java.time.LocalDate
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
+import org.postgresql.util.PSQLException
 import kotlin.collections.map
 
 class AsignacionCompraRepo {
@@ -43,20 +54,41 @@ class AsignacionCompraRepo {
     }
     //POST crear asignacion compra
     suspend fun addAsignacionCompra(asignacionCompra: AsignacionCompraDTO) = dbQuery {
-        AsignacionCompraEntity.new(asignacionCompra.idAsignacionCompra) {
-            this.idCentro = asignacionCompra.idCentro
-            this.idProveedor = asignacionCompra.idProveedor
-            this.entrega = asignacionCompra.entrega
-            //repasar formato fecha
-        }.toDTO()
+
+        val centroExists = CentroEntity.findById(asignacionCompra.idCentro) != null
+        if (!centroExists) {
+            throw ClaveForaneaException()
+        }
+        val proveedorExists = ProveedorEntity.findById(asignacionCompra.idProveedor) != null
+        if (!proveedorExists) {
+            throw ClaveForaneaException()
+        }
+        try {
+            AsignacionCompraEntity.new(asignacionCompra.idAsignacionCompra) {
+                this.idCentro = asignacionCompra.idCentro
+                this.idProveedor = asignacionCompra.idProveedor
+                this.entrega = asignacionCompra.entrega
+                //repasar formato fecha
+            }.toDTO()
+        } catch (e: ExposedSQLException) {
+            val psql = e.cause as? PSQLException ?: e.cause?.cause as? PSQLException
+            when (psql?.sqlState) {
+                "22007", "22P02" -> throw FormatoFechaException("Formato de dato inválido: ${psql.message}")
+                else -> throw e
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
     }
     //PUT actualizar asignacion compra por id
     suspend fun updateAsignacionCompra(id: Int, asignacionCompra: AsignacionCompraDTO): Boolean = dbQuery {
-        val asignacionCompraToUpdate = AsignacionCompraEntity.findById(id) ?: return@dbQuery false
-        asignacionCompraToUpdate.idCentro = asignacionCompra.idCentro
-        asignacionCompraToUpdate.idProveedor = asignacionCompra.idProveedor
-        asignacionCompraToUpdate.entrega = asignacionCompra.entrega
-        true
+        AsignacionCompraEntity.findById(id) ?: return@dbQuery false
+        val rows = AsignacionCompras.update({ AsignacionCompras.id eq id }) {
+            it[this.idCentro] = asignacionCompra.idCentro
+            it[this.idProveedor] = asignacionCompra.idProveedor
+            it[this.entrega] = asignacionCompra.entrega
+        }
+        rows > 0
     }
     //DELETE eliminar asignacion compra por id
     suspend fun deleteAsignacionCompra(id: Int): Boolean = dbQuery {

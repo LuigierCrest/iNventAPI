@@ -79,7 +79,7 @@ fun Route.incidenciaRouting() {
             call.respond(incidencias)
         }
         // POST crear incidencia
-        post {
+        post ("/nuevaincidencia") {
             try {
                 val dto = call.receive<IncidenciaDTO>()
                 IncidenciaRepo().addIncidencia(dto)
@@ -90,7 +90,7 @@ fun Route.incidenciaRouting() {
             }
         }
         // PUT actualizar incidencia por id
-        put("/{id}") {
+        put("/actualizarincidencia/{id}") {
             val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(
                 HttpStatusCode.BadRequest,
                 "Id inválido"
@@ -109,7 +109,7 @@ fun Route.incidenciaRouting() {
             }
         }
         // PUT actualizar estado de incidencia por id
-        put("/estado/{id}") {
+        put("/actualizarestado/{id}") {
             val id = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(
                 HttpStatusCode.BadRequest,
                 "Id inválido"
@@ -128,7 +128,7 @@ fun Route.incidenciaRouting() {
             }
         }
         // DELETE eliminar incidencia por id
-        delete("/{id}") {
+        delete("/borrarincidencia/{id}") {
             val id = call.parameters["id"]?.toIntOrNull() ?: return@delete call.respond(
                 HttpStatusCode.BadRequest,
                 "Id inválido"

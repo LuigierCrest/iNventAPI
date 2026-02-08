@@ -14,7 +14,8 @@ fun Application.configureSerialization() {
             prettyPrint = true
             encodeDefaults = true
             ignoreUnknownKeys = true
-            SerializersModule {  // ← SerializersModule registra serializadores globales
+            coerceInputValues = true
+            serializersModule = SerializersModule {
                 contextual(LocalDateSerializer)
             }
         })

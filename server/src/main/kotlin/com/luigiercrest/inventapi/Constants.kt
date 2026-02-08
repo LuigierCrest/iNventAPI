@@ -1,7 +1,7 @@
 package com.luigiercrest.inventapi
 
 const val SERVER_PORT = 8080
-const val SERVER_HOST = "127.0.0.1"
+const val SERVER_HOST = "0.0.0.0"
 
 object inventoryDB {
     const val URL = "jdbc:postgresql://localhost:5432/inventory_db"

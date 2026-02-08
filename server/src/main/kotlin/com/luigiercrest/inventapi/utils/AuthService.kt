@@ -16,9 +16,10 @@ interface AuthService {
 class AuthServiceImpl(private val usuarioRepo: UsuarioRepo) : AuthService {
 
     override suspend fun authenticate(dni: String, passwd: String): UsuarioDTO? {
-        val usuario = usuarioRepo.getUsuarioByDni(dni)
+        val usuario = usuarioRepo.getUsuarioByDniAuth(dni)
         if (usuario != null) {
             // Verifica la contraseña
+
             return if (BCrypt.checkpw(passwd, usuario?.passwdHash)) {
                 usuario
             } else {
