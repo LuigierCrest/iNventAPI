@@ -1,14 +1,10 @@
 package com.luigiercrest.inventapi.models.entities
 
 import com.luigiercrest.inventapi.models.dto.UsuarioDTO
-import org.jetbrains.exposed.dao.Entity
-import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Column
 
 class UsuarioEntity (id: EntityID<Int>): IntEntity(id)  {
     companion object : IntEntityClass<UsuarioEntity>(Usuarios)
@@ -41,8 +37,8 @@ object Usuarios : IntIdTable("usuario", "id_usuario") {
     val idCentro = integer("id_centro")
     val nombre = varchar("nombre", length = 50)
     val apellidos = varchar("apellidos", length = 100)
-    val email = varchar("email", length = 100)
-    val departamento = varchar("departamento", length = 100)
+    val email = varchar("email", length = 100).nullable()
+    val departamento = varchar("departamento", length = 100).nullable()
     val rol = varchar("rol", length = 20)
     val passwdHash = varchar("passwd_hash", length = 256)
 }

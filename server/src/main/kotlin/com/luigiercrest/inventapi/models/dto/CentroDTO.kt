@@ -7,6 +7,6 @@ data class CentroDTO(
     val idCentro: Int,
     val tipo: String,
     val nombre: String,
-    val direccion: String,
-    val municipio: String
+    val direccion: String?,
+    val municipio: String?
 )

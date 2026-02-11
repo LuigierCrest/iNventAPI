@@ -4,7 +4,6 @@ import com.luigiercrest.inventapi.models.dto.DispositivoDTO
 import com.luigiercrest.inventapi.models.entities.DispositivoEntity
 import com.luigiercrest.inventapi.models.entities.Dispositivos
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.and
 import java.time.LocalDate
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -76,6 +75,7 @@ class DispositivoRepo {
             DispositivoEntity.find { Dispositivos.ultimaActualizacion eq fecha }.map { it.toDTO() }
         } catch (e: Exception) {
             // Si la fecha está mal formada, devuelve lista vacía
+            println(e)
             emptyList<DispositivoDTO>()
         }
     }
@@ -87,12 +87,13 @@ class DispositivoRepo {
             DispositivoEntity.find { (Dispositivos.idCentro eq idCentro) and (Dispositivos.ultimaActualizacion eq fecha) }.map { it.toDTO() }
         } catch (e: Exception) {
             // Si la fecha está mal formada, devuelve lista vacía
+            println(e)
             emptyList<DispositivoDTO>()
         }
     }
 
     //GET por estado
-    suspend fun getDispositivosByEstado(estado: Column<String>): List<DispositivoDTO> = dbQuery {
+    suspend fun getDispositivosByEstado(estado: String): List<DispositivoDTO> = dbQuery {
         DispositivoEntity.find { Dispositivos.estado eq estado }
             .map { it.toDTO() }
     }
@@ -103,7 +104,7 @@ class DispositivoRepo {
     }
 
     //GET por categoria
-    suspend fun getDispositivosByCategoria(categoria: Column<String>): List<DispositivoDTO> = dbQuery {
+    suspend fun getDispositivosByCategoria(categoria: String): List<DispositivoDTO> = dbQuery {
         DispositivoEntity.find { Dispositivos.categoria eq categoria }
             .map { it.toDTO() }
     }
@@ -114,7 +115,7 @@ class DispositivoRepo {
     }
 
     //GET por ubicación
-    suspend fun getDispositivosByUbicacion(ubicacion: Column<String>): List<DispositivoDTO> = dbQuery {
+    suspend fun getDispositivosByUbicacion(ubicacion: String): List<DispositivoDTO> = dbQuery {
         DispositivoEntity.find { Dispositivos.ubicacion eq ubicacion }
             .map { it.toDTO() }
     }
@@ -125,7 +126,7 @@ class DispositivoRepo {
     }
 
     //GET por uso
-    suspend fun getDispositivosByUso(uso: Column<String>): List<DispositivoDTO> = dbQuery {
+    suspend fun getDispositivosByUso(uso: String): List<DispositivoDTO> = dbQuery {
         DispositivoEntity.find { Dispositivos.uso eq uso }
             .map { it.toDTO() }
     }

@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 data class ServicioTecnicoDTO (
     val idServicioTecnico: Int?=null,
     val nombre: String,
-    val direccion: String,
-    val telefono: String,
-    val email: String
+    val direccion: String?,
+    val telefono: String?,
+    val email: String?
 ) {
 }

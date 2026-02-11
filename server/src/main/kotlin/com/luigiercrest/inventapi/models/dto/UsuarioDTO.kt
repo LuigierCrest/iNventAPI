@@ -9,8 +9,8 @@ data class UsuarioDTO (
     val idCentro: Int,
     val nombre: String,
     val apellidos: String,
-    val email: String? = null,
-    val departamento: String? = null,
+    val email: String?,
+    val departamento: String?,
     val rol: String,
-    val passwdHash: String? =null
+    val passwdHash: String?
 )

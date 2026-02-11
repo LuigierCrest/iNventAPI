@@ -27,6 +27,6 @@ class CentroEntity(id: EntityID<Int>) : IntEntity(id) {
 object Centros : IntIdTable("centro", "id_centro") {
     val tipo = varchar("tipo", 50)
     val nombre = varchar("nombre", 100)
-    val direccion = varchar("direccion", 150)
-    val municipio = varchar("municipio", 100)
+    val direccion = varchar("direccion", 150).nullable()
+    val municipio = varchar("municipio", 100).nullable()
 }

@@ -1,10 +1,6 @@
 package com.luigiercrest.inventapi.routes
 
 import com.luigiercrest.inventapi.models.dto.DispositivoDTO
-import com.luigiercrest.inventapi.models.entities.Dispositivos.categoria
-import com.luigiercrest.inventapi.models.entities.Dispositivos.estado
-import com.luigiercrest.inventapi.models.entities.Dispositivos.ubicacion
-import com.luigiercrest.inventapi.models.entities.Dispositivos.uso
 import com.luigiercrest.inventapi.repository.DispositivoRepo
 import io.ktor.server.routing.*
 import io.ktor.http.HttpStatusCode
@@ -68,25 +64,25 @@ fun Route.dispositivoRouting(){
         }
         //GET por estado
         get ("/estado/{estado}"){
-            val idEstado = call.parameters["estado"]?.toIntOrNull() ?: -1
+            val estado = call.parameters["estado"] ?: ""
             val dispositivos = DispositivoRepo().getDispositivosByEstado(estado)
             call.respond(dispositivos)
         }
         //GET por categoria
         get ("/categoria/{categoria}"){
-            val idCategoria = call.parameters["categoria"]?.toIntOrNull() ?: -1
+            val categoria = call.parameters["categoria"]?: ""
             val dispositivos = DispositivoRepo().getDispositivosByCategoria(categoria)
             call.respond(dispositivos)
         }
         //GET por ubicación
         get ("/ubicacion/{ubicacion}"){
-            val idUbicacion = call.parameters["ubicacion"]?.toIntOrNull() ?: -1
+            val ubicacion = call.parameters["ubicacion"]?: ""
             val dispositivos = DispositivoRepo().getDispositivosByUbicacion(ubicacion)
             call.respond(dispositivos)
         }
         //GET por uso
         get ("/uso/{uso}"){
-            val idUso = call.parameters["uso"]?.toIntOrNull() ?: -1
+            val uso = call.parameters["uso"]?: ""
             val dispositivos = DispositivoRepo().getDispositivosByUso(uso)
             call.respond(dispositivos)
         }
@@ -103,6 +99,7 @@ fun Route.dispositivoRouting(){
                 DispositivoRepo().addDispositivo(dto)
                 call.respond(HttpStatusCode.Created, "Dispositivo agregado correctamente")
             } catch (e: Exception) {
+                println(e)
                 call.respond(HttpStatusCode.BadRequest, "Datos de dispositivo inválidos")
             }
         }
@@ -121,6 +118,7 @@ fun Route.dispositivoRouting(){
                     call.respond(HttpStatusCode.NotFound, "Dispositivo no encontrado")
                 }
             } catch (e: Exception) {
+                println(e)
                 call.respond(HttpStatusCode.BadRequest, "Datos de dispositivo inválidos")
             }
         }

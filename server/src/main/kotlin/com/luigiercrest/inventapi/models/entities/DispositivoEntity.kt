@@ -42,14 +42,14 @@ class DispositivoEntity(id: EntityID<Int>): IntEntity(id) {
 object Dispositivos : IntIdTable("dispositivo", "id_dispositivo") {
     val idCentro = integer("id_centro")
     val nombre = varchar("nombre",100)
-    val numSerie = varchar("num_serie",100)
-    val marcaModelo = varchar("marca_modelo",100)
-    val ultimaActualizacion = date("ultima_actualizacion")
-    val observaciones = varchar("observaciones",255)
-    val estado = varchar("estado",50)
-    val categoria = varchar("categoria", 50)
-    val ubicacion = varchar("ubicacion", 100)
-    val uso = varchar("uso", 50)
+    val numSerie = varchar("num_serie",100).nullable()
+    val marcaModelo = varchar("marca_modelo",100).nullable()
+    val ultimaActualizacion = date("ultima_actualizacion").nullable()
+    val observaciones = varchar("observaciones",255).nullable()
+    val estado = varchar("estado",50).nullable()
+    val categoria = varchar("categoria", 50).nullable()
+    val ubicacion = varchar("ubicacion", 100).nullable()
+    val uso = varchar("uso", 50).nullable()
     val idAsignacion = integer("id_asignacion")
 }
 
