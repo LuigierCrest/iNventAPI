@@ -72,9 +72,9 @@ fun Route.usuarioRouting(){
             try {
                 val dto = call.receive<UsuarioDTO>()
                 UsuarioRepo().addUsuario(dto)
-                call.respond(HttpStatusCode.Created, "Usuario agregado correctamente")
+                call.respond(HttpStatusCode.Created, "Usuario agregado correctamente:")
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Datos de usuario inválidos")
+                call.respond(HttpStatusCode.BadRequest, "Datos de usuario inválidos: ${e.message}")
             }
         }
 
@@ -90,9 +90,28 @@ fun Route.usuarioRouting(){
                     call.respondText("Usuario no encontrado", status = HttpStatusCode.NotFound)
                 }
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, "Datos de usuario inválidos")
+                call.respond(HttpStatusCode.BadRequest, "Datos de usuario inválidos ${e.message}")
             }
         }
+        // PUT actualizar contraseña de usuario por id
+        put("/actualizarpasswd/{id}") {
+            val idUsuario = call.parameters["id"]?.toIntOrNull() ?: return@put call.respond(
+                HttpStatusCode.BadRequest,
+                "Id inválido"
+            )
+            try {
+                val newPasswdHash = call.receive<String>()
+                val updated = UsuarioRepo().updateUsuarioPassword(idUsuario, newPasswdHash)
+                if (updated) {
+                    call.respond(HttpStatusCode.OK, "Contraseña de usuario actualizada correctamente")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, "Datos de contraseña inválidos ${e.message}")
+            }
+        }
+
         //DELETE eliminar usuario por dni
         delete ("/{dni}"){
             val dni = call.parameters["dni"] ?: ""

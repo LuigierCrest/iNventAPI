@@ -8,13 +8,9 @@ import com.luigiercrest.inventapi.exceptions.DniException
 import com.luigiercrest.inventapi.models.entities.CentroEntity
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.postgresql.util.PSQLException
-import org.slf4j.LoggerFactory
-import kotlin.text.get
 
 class UsuarioRepo {
     // Helper para reducir boilerplate de transacciones
@@ -109,14 +105,12 @@ class UsuarioRepo {
         }
         rows > 0
     }
-    // PUT actualizar contraseña por dni
-    suspend fun updateUsuarioPassword(dni: String, passwdHash: String): Boolean = dbQuery {
-        val usuarioToUpdate = UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()
+    // PUT actualizar contraseña por id
+    suspend fun updateUsuarioPassword(idUsuario: Int, newPasswdHash: String): Boolean = dbQuery {
+        val usuarioToUpdate = UsuarioEntity.findById(idUsuario)
             ?: return@dbQuery false
-        val rows = Usuarios.update({ Usuarios.dni eq dni }) {
-            it[Usuarios.passwdHash] = passwdHash
-        }
-        rows > 0
+        usuarioToUpdate.passwdHash = newPasswdHash
+        true
     }
 
 

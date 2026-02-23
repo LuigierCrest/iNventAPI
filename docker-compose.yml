@@ -1,0 +1,59 @@
+services:
+  invent-api:
+    build: .
+    container_name: invent_api # Nombre del container para NPM
+    restart: unless-stopped
+    environment:
+      # el host de la DB es el servicio de abajo
+      DB_URL: "jdbc:postgresql://postgres_db:5432/inventory_db"
+      DB_USER: admin
+      DB_PASSWORD: 1234admin6789
+    depends_on:
+      - postgres
+    networks:
+      - proxy-network
+
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 1234admin6789
+      POSTGRES_DB: inventory_db
+    ports:
+      - "127.0.0.1:5432:5432" # Puerto solo para acceso local
+    volumes:
+      - postgres_data:/var/lib/postgresql # en la versión 18 ha cambiado, la ruta a /data ahora es automática
+    networks:
+      - proxy-network # Red para el proxy inverso
+  # Adminer Database Management UI Service
+  adminer:
+    image: adminer:latest
+    container_name: adminer_ui
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8083:8080" # Puerto solo para acceso local
+    depends_on:
+      - postgres
+    networks:
+      - proxy-network # Red para el proxy inverso
+
+volumes:
+  postgres_data:
+
+networks:
+  proxy-network:
+    external: true
+
+# Para correr los servicios:
+# Primero se lecanta la red:
+  # docker network create proxy-network
+# Luego se levanta el docker compose:
+  # docker compose up -d --build
+# Para ver los servicios activos
+  # docker compose ps
+# Para acceder a Adminer: http://localhost:8083 o por proxy inverso
+# Para parar los servicios:
+  # docker compose down -v

@@ -4,10 +4,10 @@ const val SERVER_PORT = 8080
 const val SERVER_HOST = "0.0.0.0"
 
 object inventoryDB {
-    const val URL = "jdbc:postgresql://localhost:5432/inventory_db"
-    const val DRIVER = "org.postgresql.Driver"
-    const val USER = "admin"
-    const val PASSWORD = "1234admin6789"
+    val DB_URL = System.getenv("DB_URL") ?: "jdbc:postgresql://localhost:5432/inventory_db"
+    val DB_DRIVER = System.getenv("DB_DRIVER")?: "org.postgresql.Driver"
+    val DB_USER = System.getenv("DB_USER") ?: "admin"
+    val DB_PASSWORD = System.getenv("DB_PASSWORD") ?: "1234admin6789"
 }
 
 object jwtconfig {
