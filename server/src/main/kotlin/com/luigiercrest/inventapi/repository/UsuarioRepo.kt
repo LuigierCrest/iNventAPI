@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
+import org.mindrot.jbcrypt.BCrypt
 import org.postgresql.util.PSQLException
 
 class UsuarioRepo {
@@ -75,7 +76,7 @@ class UsuarioRepo {
                 this.email = nuevoUsuario.email.toString()
                 this.departamento = nuevoUsuario.departamento.toString()
                 this.rol = nuevoUsuario.rol
-                this.passwdHash = nuevoUsuario.passwdHash.toString()
+                this.passwdHash = hashPasswd(nuevoUsuario.passwdHash.toString())
             }
             created.toDTO()
         } catch (e: ExposedSQLException) {
@@ -106,11 +107,16 @@ class UsuarioRepo {
         rows > 0
     }
     // PUT actualizar contraseña por id
-    suspend fun updateUsuarioPassword(idUsuario: Int, newPasswdHash: String): Boolean = dbQuery {
+    suspend fun updateUsuarioPassword(idUsuario: Int, newPasswd: String): Boolean = dbQuery {
         val usuarioToUpdate = UsuarioEntity.findById(idUsuario)
             ?: return@dbQuery false
+        val newPasswdHash = hashPasswd(newPasswd)
         usuarioToUpdate.passwdHash = newPasswdHash
         true
+    }
+
+    private fun hashPasswd(newPasswd: String):String {
+        return BCrypt.hashpw(newPasswd, BCrypt.gensalt())
     }
 
 
