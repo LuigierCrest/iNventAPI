@@ -1,3 +1,16 @@
+/*
+*
+*   iNventAPI
+*   Es un servicio para proporcionar endpoints para la aplicación multiplataforma iNventMulti
+*   Se trata de un proyecto desarrollado en Kotlin Multi Platform.
+*
+*   Desarrollado por Luis Manuel Ortega Rodríguez, 3ºDAM, IES El Rincón, Las Palmas de Gran Canaria. Curso 2025-2026.
+*
+*   Licencia: Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+*
+* */
+
+
 package com.luigiercrest.inventapi
 
 import com.luigiercrest.inventapi.database.DatabaseFactory
