@@ -36,6 +36,15 @@ fun Route.usuarioRouting(){
             }
         }
         // GET por idUsuario
+        get ("/id/{id}"){
+            val id = call.parameters["id"]?.toIntOrNull() ?: -1
+            val usuario = UsuarioRepo().getUsuarioById(id)
+            if (usuario != null) {
+                call.respond(usuario)
+            } else{
+                call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
+            }
+        }
         //GET por centro
         get ("/centro/{idCentro}"){
             val idCentro = call.parameters["idCentro"]?.toIntOrNull() ?: -1

@@ -39,7 +39,7 @@ object Incidencias : IntIdTable("incidencia", "id_incidencia") {
     val idServicioTecnico = integer("id_servicio_tecnico")
     val dniResponsable = varchar("dni_responsable", 9)
     val descripcion = varchar("descripcion", 255)
-    val fechaReporte = date("fecha_reporte")
+    val fechaReporte = date("fecha_reporte").nullable()
     val fechaCierre = date("fecha_cierre").nullable()
     val estado = varchar("estado", 100)
 }

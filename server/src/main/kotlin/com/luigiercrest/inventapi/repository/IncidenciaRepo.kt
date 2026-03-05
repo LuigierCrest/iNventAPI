@@ -59,6 +59,7 @@ class IncidenciaRepo {
             IncidenciaEntity.find { Incidencias.fechaReporte eq fecha1 }
                 .map { it.toDTO() }
         } catch (e: Exception) {
+            println("Error al parsear fechaReporte: ${e.message}")
             emptyList<IncidenciaDTO>()
         }
 
@@ -74,6 +75,7 @@ class IncidenciaRepo {
                 IncidenciaEntity.find { Incidencias.fechaCierre eq fecha2 }
                     .map { it.toDTO() }
             } catch (e: Exception) {
+                println("LOG - Error al parsear fechaCierre: ${e.message}")
                 emptyList<IncidenciaDTO>()
             }
         }
@@ -82,14 +84,12 @@ class IncidenciaRepo {
     }
     //POST crear incidencia
     suspend fun addIncidencia(incidencia: IncidenciaDTO) = dbQuery {
-        IncidenciaEntity.new() {
+        IncidenciaEntity.new {
             this.idCentro = incidencia.idCentro
             this.idDispositivo = incidencia.idDispositivo
             this.idServicioTecnico = incidencia.idServicioTecnico
             this.dniResponsable = incidencia.dniResponsable
             this.descripcion = incidencia.descripcion
-            this.fechaReporte = incidencia.fechaReporte
-            this.fechaCierre = incidencia.fechaCierre
             this.estado = incidencia.estado
         }.toDTO()
     }
@@ -102,7 +102,6 @@ class IncidenciaRepo {
             it[this.idServicioTecnico] = incidencia.idServicioTecnico
             it[this.dniResponsable] = incidencia.dniResponsable
             it[this.descripcion] = incidencia.descripcion
-            it[this.fechaReporte] = incidencia.fechaReporte
             it[this.fechaCierre] = incidencia.fechaCierre
             it[this.estado] = incidencia.estado
         }

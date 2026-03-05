@@ -16,7 +16,7 @@ object DatabaseFactory {
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         }
-        val dataSource = HikariDataSource(config) // pool de Hikari
+        val dataSource = HikariDataSource(config) // pool de Hikari con 10 conexiones
         return Database.connect(dataSource) // Conecta Exposed a PostgreSQL
 
     }

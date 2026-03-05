@@ -22,10 +22,7 @@ fun Application.configureSecurity() {
                     .build()
             )
             validate { credential ->
-                //val dni = credential.payload.getClaim("dni").asString()
-                //val rol = credential.payload.getClaim("rol").asString()
                 val idUsuario = credential.payload.getClaim("idUsuario").asInt()
-                //if (dni.isNotEmpty() && rol.isNotEmpty())
                 if (idUsuario != null) {
                     JWTPrincipal(credential.payload)
                 } else {

@@ -27,6 +27,10 @@ class UsuarioRepo {
     suspend fun getUsuarioByDni(dni: String): UsuarioDTO? = dbQuery {
         UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()?.toDTO(incluyePasswd = false)
     }
+    //GET por idUsuario
+    suspend fun getUsuarioById(id: Int): UsuarioDTO? = dbQuery {
+        UsuarioEntity.find { Usuarios.id eq id }.firstOrNull()?.toDTO(incluyePasswd = false)
+    }
     //GET por dni para Auth, devuelve el hash de la contraseña
     suspend fun getUsuarioByDniAuth(dni: String): UsuarioDTO? = dbQuery {
         UsuarioEntity.find { Usuarios.dni eq dni }.firstOrNull()?.toDTO(incluyePasswd = true)
@@ -68,7 +72,7 @@ class UsuarioRepo {
             throw ClaveForaneaException()
         }
         try {
-            val created = UsuarioEntity.new() {
+            val created = UsuarioEntity.new(nuevoUsuario.idUsuario) {
                 this.dni= nuevoUsuario.dni
                 this.idCentro = nuevoUsuario.idCentro
                 this.nombre = nuevoUsuario.nombre

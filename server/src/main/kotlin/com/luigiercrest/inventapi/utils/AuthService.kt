@@ -19,8 +19,7 @@ class AuthServiceImpl(private val usuarioRepo: UsuarioRepo) : AuthService {
         val usuario = usuarioRepo.getUsuarioByDniAuth(dni)
         if (usuario != null) {
             // Verifica la contraseña
-
-            return if (BCrypt.checkpw(passwd, usuario?.passwdHash)) {
+            return if (BCrypt.checkpw(passwd, usuario.passwdHash)) {
                 usuario
             } else {
                 null
@@ -34,8 +33,7 @@ class AuthServiceImpl(private val usuarioRepo: UsuarioRepo) : AuthService {
         return JWT.create()
             .withAudience(jwtconfig.AUDIENCE)
             .withIssuer(jwtconfig.ISSUER)
-            .withClaim("idUsuario", usuario.idUsuario)
-            //.withClaim("rol", usuario.rol)
+            .withClaim("idUsuario", usuario.idUsuario) // El id de usuario expone menos información sensible
             .withExpiresAt(Date(System.currentTimeMillis() + jwtconfig.EXPIRATION_TIME))
             .sign(Algorithm.HMAC256(jwtconfig.SECRET))
     }

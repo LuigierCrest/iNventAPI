@@ -14,8 +14,8 @@ data class IncidenciaDTO
     val dniResponsable: String,
     val descripcion: String,
     @Serializable(with = LocalDateSerializer::class)
-    val fechaReporte: LocalDate,
+    val fechaReporte: LocalDate? = null,
     @Serializable(with = LocalDateSerializer::class)
-    val fechaCierre: LocalDate?,
+    val fechaCierre: LocalDate? = null,
     val estado: String
     ) { }

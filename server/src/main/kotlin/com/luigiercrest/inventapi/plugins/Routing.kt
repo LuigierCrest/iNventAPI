@@ -52,8 +52,9 @@ fun Application.configureRouting() {
                 get("/authtest") {
                     call.respondText("¡Conexión con autenticación exitosa!")
                 }
+                // Rutas protegidas por autenticación JWT
+                // Demasidas rutas, es mejor organizarlas por casos de uso o módulos, para la próxima
                 route("/admin") {
-                    // Rutas accesibles solo para ADMIN
                     centroRouting()
                     proveedorRouting()
                     asignacionCompraRouting()
@@ -63,12 +64,10 @@ fun Application.configureRouting() {
                     incidenciaRouting()
                 }
                 route("/dire") {
-                    // Rutas accesibles para DIRE
                     direRouting()
                 }
 
                 route("/resp") {
-                    // Rutas para RESP y DIRE
                     respRouting()
                 }
             }
